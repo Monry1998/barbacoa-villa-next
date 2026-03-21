@@ -20,32 +20,35 @@ export default function LoginPage() {
     mayuscula: /[A-Z]/.test(password),
     numero: /\d/.test(password),
   };
-// En app/login/page.tsx (dentro de la función manejarLogin)
-const manejarLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setError("");
-  setCargando(true);
 
-  const formData = new FormData(e.currentTarget);
-  const res = await iniciarSesion(formData);
+  const manejarLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setCargando(true);
 
-  if (res.error) {
-    setError(res.error);
-    setCargando(false);
-  } else {
-    // FILTRO DE ACCESO WEB
-    if (res.rol === 'admin') {
-      router.push('/admin');
-    } else if (res.rol === 'mesero') {
-      // SI ES MESERO, LE CERRAMOS LA SESIÓN WEB DE INMEDIATO
-      setError("⚠️ Acceso exclusivo para App Móvil. No puedes iniciar sesión desde la web.");
+    const formData = new FormData(e.currentTarget);
+    const res = await iniciarSesion(formData);
+
+    // CASTING DE TIPO PARA EVITAR EL ERROR DE VERCEL
+    const respuesta = res as any;
+
+    if (respuesta.error) {
+      setError(respuesta.error);
       setCargando(false);
-      
-      // Opcional: Llamamos a una acción para limpiar cookies
-      await cerrarSesion(); 
+    } else {
+      // FILTRO DE ACCESO WEB USANDO LA RESPUESTA YA VALIDADA
+      if (respuesta.rol === 'admin') {
+        router.push('/admin');
+      } else if (respuesta.rol === 'mesero') {
+        // SI ES MESERO, LE CERRAMOS LA SESIÓN WEB DE INMEDIATO
+        setError("⚠️ Acceso exclusivo para App Móvil. No puedes iniciar sesión desde la web.");
+        setCargando(false);
+        
+        // Opcional: Llamamos a una acción para limpiar cookies
+        await cerrarSesion(); 
+      }
     }
-  }
-};
+  };
 
   const manejarRecuperacion = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,8 +56,11 @@ const manejarLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     const formData = new FormData();
     formData.append("correo", correoRecuperar);
     const res = await solicitarRecuperacion(formData);
-    if (res.error) {
-      setMensajeRecuperar({ tipo: "error", texto: res.error });
+    
+    const respuestaRec = res as any;
+
+    if (respuestaRec.error) {
+      setMensajeRecuperar({ tipo: "error", texto: respuestaRec.error });
     } else {
       setMensajeRecuperar({ tipo: "success", texto: "¡Enviado! Revisa tu correo." });
       setTimeout(() => {
@@ -101,7 +107,6 @@ const manejarLogin = async (e: React.FormEvent<HTMLFormElement>) => {
               placeholder="••••••••"
               className={`p-4 bg-slate-100 border rounded-2xl outline-none transition font-bold ${password.length > 0 && (requisitos.largo && requisitos.mayuscula && requisitos.numero ? 'border-green-500' : 'border-orange-300')}`}
             />
-            {/* CHECKLIST DE SEGURIDAD */}
             {password.length > 0 && (
               <div className="flex gap-3 ml-2 mt-2">
                 <span className={`text-[8px] font-black uppercase ${requisitos.largo ? 'text-green-500' : 'text-slate-300'}`}>● 8+ Chars</span>
@@ -123,7 +128,6 @@ const manejarLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         </form>
       </div>
 
-      {/* MODAL DE RECUPERACIÓN IGUAL A TU VERSIÓN */}
       {mostrarModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-sm rounded-[3rem] p-10 shadow-2xl border-t-[8px] border-orange-500 text-slate-900">
