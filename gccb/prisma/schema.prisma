@@ -1,0 +1,72 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id                Int      @id @default(autoincrement())
+  nombre            String
+  correo            String   @unique
+  rol               String   @default("mesero") 
+  rfc               String?  
+  telefono          String?
+  verificado        Boolean  @default(false)
+  tokenVerificacion String?  @unique
+  contrasena        String?  
+  fechaCreacion     DateTime @default(now())
+  tokenPassword String? @unique // Nuevo campo para el reset de clave
+  sessionToken      String?  @unique
+}
+// prisma/schema.prisma
+
+model Platillo {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String?  @db.Text
+  precio      Decimal  @db.Decimal(10, 2)
+  imagenUrl   String?  // Aquí guardaremos el link de la foto
+  categoria   String   // Ejemplo: "Entradas", "Bebidas", "Fuertes"
+  disponible  Boolean  @default(true)
+  fechaCreacion DateTime @default(now())
+}
+
+model Mesa {
+  id        Int      @id @default(autoincrement())
+  numero    Int      @unique
+  estado    String   @default("disponible") // "disponible", "ocupada", "pagando"
+  pedidos   Pedido[]
+}
+
+model Pedido {
+  id          Int       @id @default(autoincrement())
+  mesaId      Int
+  mesa        Mesa      @relation(fields: [mesaId], references: [id])
+  platillo    String
+  cantidad    Int
+  precio      Float
+  createdAt   DateTime  @default(now())
+  estado      String    @default("pendiente") // Para saber si ya se pagó o no
+  metodoPago  String?
+}
+
+model Gasto {
+  id          Int      @id @default(autoincrement())
+  descripcion String
+  monto       Float
+  createdAt   DateTime @default(now())
+}
+
+model Corte {
+  id             Int      @id @default(autoincrement())
+  totalEfectivo  Float
+  totalDigital   Float
+  totalGastos    Float
+  totalNeto      Float    // (Efectivo - Gastos)
+  fecha          DateTime @default(now())
+}
