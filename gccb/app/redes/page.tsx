@@ -8,7 +8,7 @@ export default function RedesPage() {
       desc: "Pedidos a domicilio y eventos", 
       color: "bg-green-600", 
       icon: "💬",
-      link: "https://wa.me/528711234567" 
+      link: "https://wa.me/528711327793" 
     },
     { 
       name: "Facebook", 
@@ -16,7 +16,7 @@ export default function RedesPage() {
       desc: "Promociones y dinámicas semanales", 
       color: "bg-blue-600", 
       icon: "👤",
-      link: "#" 
+      link: "https://www.facebook.com/barbacoavilla" 
     },
     { 
       name: "Instagram", 
@@ -32,7 +32,7 @@ export default function RedesPage() {
       desc: "El detrás de cámaras del fogón", 
       color: "bg-black", 
       icon: "🎬",
-      link: "#" 
+      link: "https://www.tiktok.com/@barbacoavilla?_r=1&_t=ZS-94y4Iz0Hx39" 
     },
   ];
 
@@ -79,11 +79,11 @@ export default function RedesPage() {
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-500 mb-4">¿Cómo llegar?</h3>
               <h4 className="text-3xl font-black italic text-slate-900 tracking-tighter mb-4 uppercase">Visítanos en Torreón</h4>
               <p className="text-slate-500 text-sm font-medium mb-8 leading-relaxed">
-                Calzada Colón #1234, Centro Histórico. <br />
+                Raúl López Sánchez #10995 interior 11 Los viñedos. <br />
                 Torreón, Coahuila, México.
               </p>
               <a 
-                href="https://maps.google.com" 
+                href="https://maps.app.goo.gl/xwTuWaJ9Nay91rtN7" 
                 target="_blank"
                 className="inline-block bg-slate-900 text-white px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg"
               >
